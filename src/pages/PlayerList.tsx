@@ -142,16 +142,16 @@ const PlayerList = () => {
                 {players ? players.length : 0} {players &&players.length === 1 ? 'player' : 'players'} registered for auction
               </p>
             </div>
-             {/* <Link to="/register" className="w-3/4 sm:w-auto">
+             <Link to="/register" className="w-3/4 sm:w-auto">
               <Button className="w-full sm:w-auto h-10 sm:h-12 px-4 sm:px-6 text-sm sm:text-base font-semibold bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-gold">
                 <UserPlus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                 Register New Player
               </Button>
-            </Link>  */}
+            </Link> 
           </div>
 
           
-          <div className="flex flex-col sm:flex-row items-center sm:gap-6">
+          {/* <div className="flex flex-col sm:flex-row items-center sm:gap-6">
 
             {allTeams && allTeams.length>0 && (
                 <select
@@ -195,7 +195,7 @@ const PlayerList = () => {
 
                   <PDFCreator playerList={players} teamName={selectedTeamName}/>
 
-      </div>
+      </div>*/}
 
 
         </div>
@@ -229,12 +229,12 @@ const PlayerList = () => {
             <p className="text-muted-foreground text-sm sm:text-base mb-4 sm:mb-6 max-w-md px-4">
               Start building your dream team by registering your first player for the auction.
             </p>
-             {/* <Link to="/register">
+             <Link to="/register">
               <Button className="h-10 sm:h-12 px-6 sm:px-8 text-sm sm:text-base font-semibold gradient-pitch hover:opacity-90">
                 <Trophy className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                 Register First Player
               </Button>
-            </Link>  */}
+            </Link> 
           </div>
         ) : (
           // <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
@@ -258,15 +258,15 @@ const PlayerList = () => {
       />
 
 
-      <div className="absolute top-[37%] left-[6%] text-right text-white font-bold text-lg">
+      <div className="absolute top-[43.3%] left-[4.8%] text-right text-white font-bold text-lg">
         <img
           src={`https://storage.googleapis.com/rajas_pl/${player.profile_image}`}
           alt="img"
-          className="w-[35%] aspect-[1/1.45] object-cover rounded-[4%]"
+          className="w-[37.5%] aspect-[1/1.56] object-cover rounded-[4%]"
         />
       </div>
 
-      {!player.bid_amount && (
+      {/* {!player.bid_amount && (
   <div
     className="
       absolute top-[20%] right-[4%] z-20
@@ -279,52 +279,51 @@ const PlayerList = () => {
       backdrop-blur-sm
     "
   >
-    {/* SOLD */}
     <span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[9px] font-black uppercase text-slate-950">
       SOLD
     </span>
 
-    {/* Team */}
     <span className="text-xs font-bold text-white">
       Team Name
     </span>
 
-    {/* Bid */}
     <span className="text-sm font-black text-yellow-400">
       ₹1,000
     </span>
   </div>
-)}
+)} */}
 
 
-      <div className="absolute top-[4%] left-[6%] w-[13%] text-left text-green font-bold text-[35px]">
+      <div className="absolute bottom-[20%] left-[50%] w-[13%] text-left text-green font-bold text-[30px]">
         {player.id}
       </div>
 
-      <div className="absolute bottom-[20.5%] left-[52%] text-left text-black font-bold text-[90%]">
+      <div
+        className="absolute bottom-[14%] left-[1%] w-[45%] text-center font-bold text-[80%] text-black">
+        {player.fullname.toUpperCase()}
+      </div>
+
+      <div className="absolute bottom-[9.2%] left-[48%] text-left text-black font-bold text-[65%]">
         {player.player_role}
       </div>
 
-      <div className="absolute bottom-[17.5%] left-[52%] text-left text-black font-bold text-[90%]">
+      <div className="absolute bottom-[7.2%] left-[48%] text-left text-black font-bold text-[65%]">
         {player.batting_style}
       </div>
 
-      <div className="absolute bottom-[14%] left-[52%] text-left text-black font-bold text-[90%]">
+      <div className="absolute bottom-[4.8%] left-[48%] text-left text-black font-bold text-[65%]">
         {player.bowling_style}
       </div>
 
-      <div className="absolute bottom-[11%] left-[52%] text-left text-black font-bold text-[90%]">
+      <div className="absolute bottom-[2.7%] left-[48%] text-left text-black font-bold text-[65%]">
         {capitalizeFirst(player?.location)}
       </div>
 
-      <div className="absolute bottom-[8%] left-[52%] text-left text-black font-bold text-[90%] ">
+      <div className="absolute bottom-[0.2%] left-[48%] text-left text-black font-bold text-[65%] ">
         {player.contact_no}
       </div>
 
-      <div
-        className="absolute bottom-[4.2%] left-[7%] w-[50%] text-left font-bold text-[80%] text-white">
-        {player.fullname.toUpperCase()}
-      </div>
+      
 
       
      {/* {isLogin && (

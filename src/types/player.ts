@@ -2,12 +2,18 @@ export interface Player {
   id: string;
   fullname: string;
   contact_no: string;
+  whatsapp_no:string;
   location: string;
   player_role: string;
   batting_style: string;
   bowling_style: string;
   profile_image: string;
-  bid_amount : string
+  bid_amount : number
+  jersey_name : string;
+  jersey_no : string;
+  jersey_size : string;
+  status : number;
+  payment_screenshot : string;
 }
 
 export const playerRoles = [
@@ -29,3 +35,12 @@ export const bowlingStyles = [
   "Left Hand",
   "None"
 ] as const;
+
+export const sizeList = [
+  "XXL",
+  "XL",
+  "L",
+  "M",
+  "S",
+  "XS"
+]as const;

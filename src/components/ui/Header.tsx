@@ -17,9 +17,9 @@ const Header = () => {
     // : { path: "/login", label: "Login", icon: LogIn },
     { path: '/', label: 'Home', icon: Home },
     { path: '/players', label: 'Players', icon: Users },
-    // { path: '/register', label: 'Register', icon: UserPlus },
+    { path: '/register', label: 'Register', icon: UserPlus },
     { path: '/teams', label: 'Teams', icon: Group },
-    { path: '/auction-live', label: 'Live', icon: Radio },
+    // { path: '/auction-live', label: 'Live', icon: Radio },
   ];
 
 
@@ -66,7 +66,7 @@ const Header = () => {
       BK's Cricket Auction
     </h1>
 
-   <Link
+   {/* <Link
       to="/auction-live"
       className="
         flex items-center gap-1
@@ -86,7 +86,7 @@ const Header = () => {
     >
       <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
       LIVE
-    </Link>
+    </Link> */}
 
   </div>
 

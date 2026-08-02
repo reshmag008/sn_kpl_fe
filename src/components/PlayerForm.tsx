@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Camera, User, Phone, MapPin, Shield, Crosshair, Target, Save, X, Crop } from 'lucide-react';
+import { Camera, User, Phone, MapPin, Shield, Crosshair, Target, Save, X, Crop ,MessageCircle,Download,Upload} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,10 +12,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { usePlayer } from '@/context/PlayerContext';
-import { Player, playerRoles, battingStyles, bowlingStyles } from '@/types/player';
+import { Player, playerRoles, battingStyles, bowlingStyles, sizeList } from '@/types/player';
 import { toast } from 'sonner';
 import ImageCropper from './ImageCropper';
 import PlayerService from '@/service/PlayerService';
+import {playerStatus} from "../constants";
 
 interface PlayerFormProps {
   editPlayer?: Player;
@@ -24,6 +25,13 @@ interface PlayerFormProps {
 
 const PlayerForm = ({ editPlayer, onCancel }: PlayerFormProps) => {
   const navigate = useNavigate();
+
+  const paymentInputRef = useRef<HTMLInputElement>(null);
+
+const [paymentImage, setPaymentImage] = useState<File | null>(null);
+const [paymentPreview, setPaymentPreview] = useState("");
+
+
   const { addPlayer, updatePlayer } = usePlayer();
   const fileInputRef = useRef<HTMLInputElement>(null);
    const [isLoading, setIsLoading] = useState(false)
@@ -36,6 +44,13 @@ const PlayerForm = ({ editPlayer, onCancel }: PlayerFormProps) => {
     batting_style: '',
     bowling_style: '',
     profile_image: '',
+    jersey_name : "",
+    jersey_no:'',
+    jersey_size : '',
+    whatsapp_no : '',
+    status: 1,
+    bid_amount : 0,
+    payment_screenshot : '',
   });
 
   const [imagePreview, setImagePreview] = useState<string>('');
@@ -53,6 +68,13 @@ const PlayerForm = ({ editPlayer, onCancel }: PlayerFormProps) => {
         batting_style: editPlayer.batting_style,
         bowling_style: editPlayer.bowling_style,
         profile_image: editPlayer.profile_image,
+        jersey_name: editPlayer.jersey_name,
+        jersey_no: editPlayer.jersey_no,
+        jersey_size: editPlayer.jersey_size,
+        whatsapp_no: editPlayer.whatsapp_no,
+        status : editPlayer.status,
+        bid_amount : editPlayer.bid_amount,
+        payment_screenshot : editPlayer.payment_screenshot
       });
       setImagePreview(`https://storage.googleapis.com/rajas_pl/${editPlayer.profile_image}`);
     }
@@ -135,6 +157,11 @@ const PlayerForm = ({ editPlayer, onCancel }: PlayerFormProps) => {
       return;
     }
 
+     if (!formData.whatsapp_no.trim()) {
+      toast.error('Whatsapp Number is required');
+      return;
+    }
+
     if (!formData.location) {
       toast.error('Location is required');
       return;
@@ -155,6 +182,14 @@ const PlayerForm = ({ editPlayer, onCancel }: PlayerFormProps) => {
       return;
     }
 
+   
+    if (!formData.jersey_size) {
+      toast.error('Jersey Size is required');
+      return;
+    }
+
+   
+
     
     
 
@@ -171,6 +206,8 @@ const PlayerForm = ({ editPlayer, onCancel }: PlayerFormProps) => {
   const savePlayer =()=>{
     setIsLoading(true);
     formData.profile_image = formData.fullname + "_" + formData.contact_no + ".jpeg";
+    formData.status = playerStatus.pending;
+    formData.payment_screenshot = 'Pay_ScrShot_'+formData.fullname + "_" + formData.contact_no + ".jpeg";
     PlayerService().addPlayer(formData).then((response:any)=>{
         console.log("response== ", response);
         if(response.data){
@@ -178,6 +215,7 @@ const PlayerForm = ({ editPlayer, onCancel }: PlayerFormProps) => {
            addPlayer(formData);
              navigate('/players');
           playerImageUpload(response.data.id);
+          playerpaymentScreenshotUpload(response.data.id)
         }else{
           toast.error('Registration Failed')
         }
@@ -209,10 +247,37 @@ const PlayerForm = ({ editPlayer, onCancel }: PlayerFormProps) => {
   toast.error('Image upload failed. Please contact your admin')
   setIsLoading(false);
 }
-
-
-   
   }
+
+    const playerpaymentScreenshotUpload = async (playerId:any) => {
+    try{
+    const formFileData = new FormData()
+    if(paymentImage){
+      formFileData.append('file_name', 'Pay_ScrShot_'+formData.fullname + "_" + formData.contact_no + ".jpeg",)
+      formFileData.append('player_id', playerId)
+      formFileData.append('file', paymentImage)
+    await PlayerService().PlayerImageGoogleStorageCloudUpload(formFileData);
+    setIsLoading(false);
+  };
+}catch(err){
+  console.log("Error while screenshot upload")
+  toast.error('Payment Screenshot upload failed. Please contact your admin')
+  setIsLoading(false);
+}
+  }
+
+
+
+  const handlePaymentUpload = (
+  e: React.ChangeEvent<HTMLInputElement>
+) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  setPaymentImage(file);
+  setPaymentPreview(URL.createObjectURL(file));
+};
+
 
 
 
@@ -291,6 +356,21 @@ const PlayerForm = ({ editPlayer, onCancel }: PlayerFormProps) => {
             />
           </div>
 
+          {/* Location */}
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="location" className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
+              <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+              Location
+            </Label>
+            <Input
+              id="location"
+              value={formData.location}
+              onChange={(e) => setFormData((prev) => ({ ...prev, location: e.target.value }))}
+              placeholder="Enter location"
+              className={inputClasses}
+            />
+          </div>
+
           {/* Contact */}
           <div className="space-y-1.5 sm:space-y-2">
             <Label htmlFor="contact" className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
@@ -306,20 +386,22 @@ const PlayerForm = ({ editPlayer, onCancel }: PlayerFormProps) => {
             />
           </div>
 
-          {/* Location */}
+          {/* whatsapp no */}
           <div className="space-y-1.5 sm:space-y-2">
-            <Label htmlFor="location" className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
-              <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
-              Location
+            <Label htmlFor="contact" className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
+              <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+              Whatsapp Number *
             </Label>
             <Input
-              id="location"
-              value={formData.location}
-              onChange={(e) => setFormData((prev) => ({ ...prev, location: e.target.value }))}
-              placeholder="Enter location"
+              id="contact"
+              value={formData.whatsapp_no}
+              onChange={(e) => setFormData((prev) => ({ ...prev, whatsapp_no: e.target.value }))}
+              placeholder="Enter whatsapp number"
               className={inputClasses}
             />
           </div>
+
+          
 
           {/* Player Role */}
           <div className="space-y-1.5 sm:space-y-2">
@@ -389,7 +471,147 @@ const PlayerForm = ({ editPlayer, onCancel }: PlayerFormProps) => {
               </SelectContent>
             </Select>
           </div>
+
+          {/* Jersey Name */}
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="contact" className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
+              <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+              Jersey Name
+            </Label>
+            <Input
+              id="jersey_name"
+              value={formData.jersey_name}
+              onChange={(e) => setFormData((prev) => ({ ...prev, jersey_name: e.target.value }))}
+              placeholder="Enter Jersey Name"
+              className={inputClasses}
+            />
+          </div>
+
+          {/* Jersey No */}
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="contact" className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
+              <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+              Jersey Number
+            </Label>
+            <Input
+              id="jersey_no"
+              value={formData.jersey_no}
+              onChange={(e) => setFormData((prev) => ({ ...prev, jersey_no: e.target.value }))}
+              placeholder="Enter Jersey No"
+              className={inputClasses}
+            />
+          </div>
+
+          {/* Jersey Size */}
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
+              <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+              Jersey Size*
+            </Label>
+            <Select
+              value={formData.jersey_size}
+              onValueChange={(value) => setFormData((prev) => ({ ...prev, jersey_size: value }))}
+            >
+              <SelectTrigger className={inputClasses}>
+                <SelectValue placeholder="Select Jersey Size" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-2 border-border z-50">
+                {sizeList.map((style) => (
+                  <SelectItem key={style} value={style} className="cursor-pointer hover:bg-muted">
+                    {style}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+
+
+
         </div>
+
+        <div className="flex flex-col items-center justify-center gap-4 p-5 rounded-xl border border-border bg-card shadow-sm">
+    <h3 className="text-lg font-semibold">
+      Registration QR Code
+    </h3>
+
+    <img
+      src='./qr.jpeg'
+      alt="QR Code"
+      className="w-40 h-40 sm:w-48 sm:h-48 rounded-lg border bg-white p-2"
+    />
+
+    <Button
+      type="button"
+      variant="outline"
+      onClick={() => {
+        const link = document.createElement("a");
+        link.href = './qr.jpeg';
+        link.download = "Player-Registration-QR.jpeg";
+        link.click();
+      }}
+      className="w-full sm:w-auto"
+    >
+      <Download className="w-4 h-4 mr-2" />
+      Download QR
+    </Button>
+
+    <p className="text-xs text-center text-muted-foreground">
+      Scan this QR code to register or share it with players.
+    </p>
+  </div>
+
+  <div className="space-y-3">
+  <Label className="flex items-center gap-2 text-sm font-semibold">
+    <Upload className="w-4 h-4 text-primary" />
+    Payment Screenshot *
+  </Label>
+
+  <div
+    onClick={() => paymentInputRef.current?.click()}
+    className="border-2 border-dashed border-primary/30 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-all"
+  >
+    {paymentPreview ? (
+      <img
+        src={paymentPreview}
+        alt="Payment Screenshot"
+        className="max-h-60 rounded-lg object-contain"
+      />
+    ) : (
+      <>
+        <Upload className="w-10 h-10 text-primary mb-2" />
+        <p className="font-medium">Click to upload payment screenshot</p>
+        <p className="text-xs text-muted-foreground mt-1">
+          JPG, PNG or JPEG
+        </p>
+      </>
+    )}
+  </div>
+
+  <input
+    ref={paymentInputRef}
+    type="file"
+    accept="image/*"
+    className="hidden"
+    onChange={handlePaymentUpload}
+  />
+
+  {paymentPreview && (
+    <Button
+      type="button"
+      variant="outline"
+      size="sm"
+      onClick={() => {
+        setPaymentImage(null);
+        setPaymentPreview("");
+      }}
+    >
+      Remove Screenshot
+    </Button>
+  )}
+</div>
+
+
 
         {/* Submit Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-3 sm:pt-4">
@@ -418,7 +640,15 @@ const PlayerForm = ({ editPlayer, onCancel }: PlayerFormProps) => {
             </Button>
           )}
         </div>
+
+        
+
+{/* </div> */}
+
+
       </form>
+
+
     </>
   );
 };
