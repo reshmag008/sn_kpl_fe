@@ -9,11 +9,14 @@ import playerCardImg from '../assets/playerCard.jpeg'
 import soldPng from '../assets/sold.png'
 import PDFCreator from './PDFCreator';
 import TeamService from '@/service/TeamService';
+import { useAuth } from "../context/AuthContext"; // adjust the path
+import { toast } from 'sonner';
 
 
 
 const PlayerList = () => {
     const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
     const { players, setPlayers } = usePlayer();
   const [isLoading, setIsLoading] = useState(true)
@@ -24,32 +27,15 @@ const PlayerList = () => {
         const [selectedTeamId, setSelectedTeamId] = useState('')
 
     const [allTeams, setAllTeams] = useState<any>();
-    const [isLogin , setIsLogin] = useState(false)
+const [approvingPlayerId, setApprovingPlayerId] = useState<number | null>(null);
+
 
 
   useEffect(() => {
-    
+    console.log("isLoggedIn== ",isLoggedIn)
     GetAllPlayers();
     GetAllTeams();
   }, []);
-
-
-    useEffect(() => {
-  const handleUserChanged = () => {
-    console.log("isLoggedIn==== ",localStorage.getItem("isLoggedIn"));
-    setIsLogin(localStorage.getItem("isLoggedIn") == "true")
-  };
-
-  handleUserChanged();
-
-  window.addEventListener("storage", handleUserChanged);
-
-  return () => {
-    window.removeEventListener("storage", handleUserChanged);
-  };
-}, []);
-
-
 
 
     useEffect(() => {
@@ -123,6 +109,29 @@ const PlayerList = () => {
     }
 
      const handleDelete = (player)=>{
+      
+    }
+
+
+    const handleApprove = (playerId : any)=>{
+      setApprovingPlayerId(playerId);
+      PlayerService().approvePlayer(playerId).then((response:any)=>{
+        console.log("response=== ", response)
+        setApprovingPlayerId(null);
+
+        let updatedPlayer = response.data;
+
+        setPlayers((prev) =>
+          prev.map((player) =>
+            player.id === updatedPlayer.id
+              ? { ...player, ...updatedPlayer }
+              : player
+          )
+        );
+
+        toast.success('Player approved successfully!');
+
+      })
       
     }
 
@@ -250,23 +259,80 @@ const PlayerList = () => {
 
   {players && players.map((player) => (
     <div key={player.id} className="relative group">
-      
-      <img
-        src={playerCardImg}
-        alt={'img'}
-        className="w-full h-full object-cover"
+  <img
+    src={playerCardImg}
+    alt="img"
+    className="w-full h-full object-cover"
+  />
+
+  {/* Admin Overlay */}
+  {isLoggedIn && player.status==1 && (
+    <div className="absolute top-3 right-3 z-30 flex items-center gap-3 rounded-lg bg-black/75 p-2 backdrop-blur-sm shadow-lg">
+      {/* Payment Screenshot */}
+      {player.payment_screenshot ? (
+        <a
+          href={`https://storage.googleapis.com/rajas_pl/${player.payment_screenshot}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src={`https://storage.googleapis.com/rajas_pl/${player.payment_screenshot}`}
+            alt="Payment Screenshot"
+            className="h-16 w-12 rounded border border-white object-cover hover:scale-105 transition-transform"
+          />
+        </a>
+      ) : (
+        <div className="flex h-16 w-12 items-center justify-center rounded border border-dashed border-gray-400 text-[10px] text-white">
+          No Image
+        </div>
+      )}
+
+      {/* Approve Button */}
+      { approvingPlayerId === player.id  ? (
+  <div className="flex items-center justify-center rounded-md bg-green-600 px-3 py-2">
+    <svg
+      className="h-4 w-4 animate-spin text-white"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
       />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+      />
+    </svg>
+  </div>
+) : (
+  <button
+    onClick={() => handleApprove(player.id)}
+    className="rounded-md bg-green-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-green-700"
+  >
+    Approve
+  </button>
+)}
 
+    </div>
+  )}
 
-      <div className="absolute top-[43.3%] left-[4.8%] text-right text-white font-bold text-lg">
-        <img
-          src={`https://storage.googleapis.com/rajas_pl/${player.profile_image}`}
-          alt="img"
-          className="w-[37.5%] aspect-[1/1.56] object-cover rounded-[4%]"
-        />
-      </div>
+  {/* Existing content */}
+  <div className="absolute top-[43.3%] left-[4.8%] text-right text-white font-bold text-lg">
+    <img
+      src={`https://storage.googleapis.com/rajas_pl/${player.profile_image}`}
+      alt="img"
+      className="w-[37.5%] aspect-[1/1.56] object-cover rounded-[4%]"
+    />
+  </div>
 
-      {/* {!player.bid_amount && (
+  {/* {!player.bid_amount && (
   <div
     className="
       absolute top-[20%] right-[4%] z-20
@@ -344,9 +410,7 @@ const PlayerList = () => {
   </div>
   )} */}
 
-
-
-    </div>
+</div>
   ))}
 </div>
 

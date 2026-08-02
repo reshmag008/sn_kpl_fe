@@ -38,6 +38,7 @@ const AppContent = () => {
 
       <Routes>
         <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<PlayerRegister />} />
         <Route path="/players" element={<PlayerList />} />
         <Route path="/auction" element={<LiveAuctionPlayerCard />} />

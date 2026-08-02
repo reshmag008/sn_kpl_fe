@@ -207,7 +207,6 @@ const [paymentPreview, setPaymentPreview] = useState("");
     setIsLoading(true);
     formData.profile_image = formData.fullname + "_" + formData.contact_no + ".jpeg";
     formData.status = playerStatus.pending;
-    formData.payment_screenshot = 'Pay_ScrShot_'+formData.fullname + "_" + formData.contact_no + ".jpeg";
     PlayerService().addPlayer(formData).then((response:any)=>{
         console.log("response== ", response);
         if(response.data){
@@ -254,6 +253,7 @@ const [paymentPreview, setPaymentPreview] = useState("");
     const formFileData = new FormData()
     if(paymentImage){
       formFileData.append('file_name', 'Pay_ScrShot_'+formData.fullname + "_" + formData.contact_no + ".jpeg",)
+      formFileData.append('screenshot', 'Pay_ScrShot_'+formData.fullname + "_" + formData.contact_no + ".jpeg",)
       formFileData.append('player_id', playerId)
       formFileData.append('file', paymentImage)
     await PlayerService().PlayerImageGoogleStorageCloudUpload(formFileData);
