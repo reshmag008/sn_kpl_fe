@@ -265,6 +265,8 @@ const [approvingPlayerId, setApprovingPlayerId] = useState<number | null>(null);
     className="w-full h-full object-cover"
   />
 
+  
+
   {/* Admin Overlay */}
   {isLoggedIn && player.status==1 && (
     <div className="absolute top-3 right-3 z-30 flex items-center gap-3 rounded-lg bg-black/75 p-2 backdrop-blur-sm shadow-lg">
@@ -331,6 +333,18 @@ const [approvingPlayerId, setApprovingPlayerId] = useState<number | null>(null);
       className="w-[37.5%] aspect-[1/1.56] object-cover rounded-[4%]"
     />
   </div>
+
+
+  {player.status == 1 && (
+     <div className="absolute top-3 right-3 z-30">
+  <div className="flex items-center gap-2 rounded-full border border-yellow-300/50 bg-yellow-500/90 px-4 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-lg backdrop-blur-sm">
+    <span className="h-2.5 w-2.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.8)]" />
+    Pending
+  </div>
+</div>
+    )
+  }
+
 
   {/* {!player.bid_amount && (
   <div
