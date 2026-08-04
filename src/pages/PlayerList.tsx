@@ -335,17 +335,6 @@ const [approvingPlayerId, setApprovingPlayerId] = useState<number | null>(null);
   </div>
 
 
-  {player.status == 1 && (
-     <div className="absolute top-3 right-3 z-30">
-  <div className="flex items-center gap-2 rounded-full border border-yellow-300/50 bg-yellow-500/90 px-4 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-lg backdrop-blur-sm">
-    <span className="h-2.5 w-2.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.8)]" />
-    Pending
-  </div>
-</div>
-    )
-  }
-
-
   {/* {!player.bid_amount && (
   <div
     className="
@@ -399,8 +388,17 @@ const [approvingPlayerId, setApprovingPlayerId] = useState<number | null>(null);
         {capitalizeFirst(player?.location)}
       </div>
 
-      <div className="absolute bottom-[0.2%] left-[48%] text-left text-black font-bold text-[65%] ">
-        {player.contact_no}
+      <div className="absolute bottom-[0.2%] left-[48%] text-left text-black font-bold gap-2">
+        <span className="text-black font-bold text-[65%]">
+          {player.contact_no}
+        </span>
+
+        {player.status ==1  && (
+          <span className="rounded-full bg-yellow-500 px-2 py-0.5 text-[50%] font-bold text-white shadow-sm">
+            Pending
+          </span>
+          
+        )}
       </div>
 
       
