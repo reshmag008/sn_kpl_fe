@@ -17,6 +17,8 @@ import { toast } from 'sonner';
 import ImageCropper from './ImageCropper';
 import PlayerService from '@/service/PlayerService';
 import {playerStatus} from "../constants";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 interface PlayerFormProps {
   editPlayer?: Player;
@@ -207,6 +209,7 @@ const [paymentPreview, setPaymentPreview] = useState("");
     setIsLoading(true);
     formData.profile_image = formData.fullname + "_" + formData.contact_no + ".jpeg";
     formData.status = playerStatus.pending;
+    console.log("formData== ",formData)
     PlayerService().addPlayer(formData).then((response:any)=>{
         console.log("response== ", response);
         if(response.data){
@@ -371,35 +374,117 @@ const [paymentPreview, setPaymentPreview] = useState("");
             />
           </div>
 
-          {/* Contact */}
-          <div className="space-y-1.5 sm:space-y-2">
-            <Label htmlFor="contact" className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
-              <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
-              Contact Number *
-            </Label>
-            <Input
-              id="contact"
-              value={formData.contact_no}
-              onChange={(e) => setFormData((prev) => ({ ...prev, contact_no: e.target.value }))}
-              placeholder="Enter contact number"
-              className={inputClasses}
-            />
-          </div>
+  {/* Contact Number */}
+  <div className="space-y-1.5 sm:space-y-2">
+    <Label
+      htmlFor="contact"
+      className="flex items-center gap-2 text-xs sm:text-sm font-semibold"
+    >
+      <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+      Contact Number *
+    </Label>
 
-          {/* whatsapp no */}
-          <div className="space-y-1.5 sm:space-y-2">
-            <Label htmlFor="contact" className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
-              <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
-              Whatsapp Number *
-            </Label>
-            <Input
-              id="contact"
-              value={formData.whatsapp_no}
-              onChange={(e) => setFormData((prev) => ({ ...prev, whatsapp_no: e.target.value }))}
-              placeholder="Enter whatsapp number"
-              className={inputClasses}
-            />
-          </div>
+    {/* <Input
+      id="contact"
+      value={formData.contact_no}
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          contact_no: e.target.value,
+        }))
+      }
+      placeholder="Enter contact number"
+      className={inputClasses}
+    /> */}
+
+
+     <PhoneInput
+      country="in"
+      enableSearch={true}
+      searchPlaceholder="Search country..."
+      value={formData.contact_no}
+      onChange={(phone) =>
+        setFormData((prev) => ({
+          ...prev,
+          contact_no: phone,
+        }))
+      }
+      inputProps={{
+        id: "contact_no",
+        name: "contact_no",
+        required: true,
+      }}
+      containerClass="!w-full"
+      inputClass="
+        !w-full
+        !h-10
+        sm:!h-11
+        !rounded-md
+        !border
+        !border-input
+        !bg-background
+        !text-sm
+      "
+      buttonClass="
+        !h-10
+        sm:!h-11
+        !rounded-l-md
+        !border-input
+        !bg-background
+      "
+      dropdownClass="!z-50"
+    />
+
+
+  </div>
+
+  {/* WhatsApp Number */}
+  <div className="space-y-1.5 sm:space-y-2">
+    <Label
+      htmlFor="whatsapp_no"
+      className="flex items-center gap-2 text-xs sm:text-sm font-semibold"
+    >
+      <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+      WhatsApp Number *
+    </Label>
+
+    <PhoneInput
+      country="in"
+      enableSearch={true}
+      searchPlaceholder="Search country..."
+      value={formData.whatsapp_no}
+      onChange={(phone) =>
+        setFormData((prev) => ({
+          ...prev,
+          whatsapp_no: phone,
+        }))
+      }
+      inputProps={{
+        id: "whatsapp_no",
+        name: "whatsapp_no",
+        required: true,
+      }}
+      containerClass="!w-full"
+      inputClass="
+        !w-full
+        !h-10
+        sm:!h-11
+        !rounded-md
+        !border
+        !border-input
+        !bg-background
+        !text-sm
+      "
+      buttonClass="
+        !h-10
+        sm:!h-11
+        !rounded-l-md
+        !border-input
+        !bg-background
+      "
+      dropdownClass="!z-50"
+    />
+  </div>
 
           
 
