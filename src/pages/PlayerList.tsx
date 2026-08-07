@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Users, UserPlus, Trophy,Edit, Trash2  } from 'lucide-react';
+import { Users, UserPlus, Trophy,Edit, Trash2, Download  } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import PlayerCard from '@/components/PlayerCard';
 import { usePlayer } from '@/context/PlayerContext';
@@ -11,6 +11,7 @@ import PDFCreator from './PDFCreator';
 import TeamService from '@/service/TeamService';
 import { useAuth } from "../context/AuthContext"; // adjust the path
 import { toast } from 'sonner';
+import { downloadPlayerImage } from "./playerImageGenerator";
 
 
 
@@ -110,6 +111,17 @@ const [approvingPlayerId, setApprovingPlayerId] = useState<number | null>(null);
 
      const handleDelete = (player)=>{
       
+    }
+
+    const handleDownload = (player)=>{
+      downloadPlayerImage({
+        player,
+        playerBg :"../assets/playerCard.jpeg",
+        soldImg : "../assets/sold.png",
+        contentWidth:5,
+        contentHeight:5,
+        capitalizeFirst,
+      })
     }
 
 
@@ -394,7 +406,7 @@ const [approvingPlayerId, setApprovingPlayerId] = useState<number | null>(null);
         </span>
 
         {player.status ==1  && (
-          <span className="rounded-full bg-yellow-500 px-2 py-0.5 text-[50%] font-bold text-white shadow-sm">
+          <span className="ml-2 rounded-full bg-yellow-500 px-2 py-0.5 text-[50%] font-bold text-white shadow-sm">
             Pending
           </span>
           
@@ -404,23 +416,30 @@ const [approvingPlayerId, setApprovingPlayerId] = useState<number | null>(null);
       
 
       
-     {/* {isLogin && (
+     {/* {isLogin && ( */}
      <div className="absolute top-3 left-[15%] right-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 sm:gap-3 px-4">
-    <button
+    {/* <button
       onClick={() => handleEdit(player)}
       className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition-colors"
     >
       <Edit className="w-4 h-4" />
-    </button>
+    </button> */}
 
-    <button
+    {/* <button
       onClick={() => handleDelete(player.id)}
       className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700 transition-colors"
     >
       <Trash2 className="w-4 h-4" />
-    </button>
+    </button> */}
+    {/* <button
+      onClick={() => handleDownload(player)}
+      className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700 transition-colors"
+    >
+      <Download className="w-4 h-4" />
+    </button> */}
+
   </div>
-  )} */}
+  {/* )} */}
 
 </div>
   ))}
