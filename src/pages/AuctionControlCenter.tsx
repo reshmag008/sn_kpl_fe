@@ -408,6 +408,8 @@ const AuctionPlayerPage: React.FC = () => {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
             {allTeams.map((team:any, index:any) => (
+              <>
+              {team.player_count != TOTAL_PLAYER && 
               <div
                 key={team.id}
                 onClick={() => cardClick(team, index)}
@@ -446,6 +448,8 @@ const AuctionPlayerPage: React.FC = () => {
                 </p>
 
               </div>
+              }
+              </>
             ))}
           </div>
         </div>
