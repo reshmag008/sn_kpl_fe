@@ -14,7 +14,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 const AuctionPlayerPage: React.FC = () => {
 
-  const baseAmount = 1000;
+  const baseAmount = 100;
   const [allTeams, setAllTeams] = useState<any>([]);
   const [bidFlow, setBidFlow] = useState<any>([]);
   const [bidAmount, setBidAmount] = useState<number>(0);
@@ -173,9 +173,9 @@ const AuctionPlayerPage: React.FC = () => {
         let lastBidAmount = bidFlow[bidFlow.length - 1].amount;
         console.log("lastBidAmount=== ", lastBidAmount);
         if(lastBidAmount >= 10000){
-        amount = bidAmount + 1000
+        amount = bidAmount + 50
         }else{
-          amount = bidAmount + 1000
+          amount = bidAmount + 50
         }
 
         if (amount > team.max_bid_amount) {
