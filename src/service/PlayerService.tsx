@@ -14,6 +14,11 @@ export const PlayerService = () => ({
         
     },
 
+
+    GetCurrentBidPlayer : ()=>{
+        return(axios.get(BACKEND_URL + "/current_bid_player"))
+    },
+
     approvePlayer : (playerId:any) =>{
         let params = {id : playerId}
         return(axios.post(BACKEND_URL + "/approve_player",  params))

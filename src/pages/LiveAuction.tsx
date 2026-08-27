@@ -75,7 +75,7 @@ const LiveAuction: React.FC = () => {
 
     setSocket(newSocket);
 
-    // getSoldPlayers();
+    GetCurrentBidPlayer();
     GetAllTeams();
     GetAllPlayers();
 
@@ -146,6 +146,16 @@ const LiveAuction: React.FC = () => {
     console.log("Updated playersByTeam:", playersByTeam);
     setPlayersByTeam(playersByTeam)
   }, [playersByTeam]);
+
+
+  const GetCurrentBidPlayer = async () =>{
+
+    let currentPlayerData = await PlayerService().GetCurrentBidPlayer();
+    console.log("currentPlayerData== ", currentPlayerData?.data);
+    if(!currentBidPlayer.id){
+      setcurrentBidPlayer(currentPlayerData?.data);
+    }
+  }
 
 
   const GetAllPlayers = async () => {
