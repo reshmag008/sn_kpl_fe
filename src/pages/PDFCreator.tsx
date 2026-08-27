@@ -35,7 +35,7 @@ const PDFCreator: React.FC<props> = ({playerList,teamName}) => {
     const pageWidth = pdf.internal.pageSize.width;
     const pageHeight = pdf.internal.pageSize.height;
     const margin = 2; // Margin for all sides
-    const contentWidth = pageWidth - margin * 3;
+    const contentWidth = pageWidth - margin * 4.6;
     const contentHeight = pageHeight - margin * 60;
     let pageNumber = 1;
 
@@ -55,7 +55,7 @@ const PDFCreator: React.FC<props> = ({playerList,teamName}) => {
         const tempDiv = document.createElement("div");
         tempDiv.style.width = `${contentWidth * 3}px`; // Increase width for higher-res canvas
         tempDiv.style.height = `${contentHeight * 5}px`; // Increase height for higher-res canvas
-        tempDiv.style.marginTop = '20px';
+        tempDiv.style.marginTop = '0px';
         tempDiv.style.display = 'flex';
         tempDiv.style.justifyContent = 'center';
         tempDiv.style.alignItems = 'center';
@@ -73,47 +73,50 @@ const PDFCreator: React.FC<props> = ({playerList,teamName}) => {
                 background-image: url(${playerBg});
                 background-size: cover;
                 background-position: center;
+                backgroundRepeat: "no-repeat",
                 
                 ">
 
 
 
                 <div style="display:flex">
-                    <img src="${profileImageBase64}" alt="Player Image" style="height: 18.1rem; width: 12.8rem; margin-left: 32px; object-fit: cover; margin-top: 328px; border-radius:10px;
+                    <img src="${profileImageBase64}" alt="Player Image" style="height: 21rem; width: 13.7rem; margin-left: 28px; object-fit: cover; margin-top: 380px; border-radius:13px;
                     mask-composite: intersect;" />
                 </div>
 
                 <div style="text-align:left;">
-                    <p style="margin-top:-600px; margin-left:40px; font-size: 40px; color: black; font-weight:bold;">${player.id}</p>
+                    <p style="margin-top:-105px; margin-left:300px; font-size: 40px; color: black; font-weight:bold;">${player.id}</p>
+                </div>
+
+                <div style="text-align:center;width:250px">
+                    <p style="margin-top:50px;margin-left:2px; font-size: 21px; color:black; font-weight:bold;">${player.fullname.toUpperCase()}</p>
                 </div>
 
 
                 <div style="text-align:left">
-                    <p style="margin-top:585px; font-size: 21px; color:black; font-weight:bold;padding-left:310px;">${player.player_role}</p>
+                    <p style="margin-top:13px; font-size: 21px; color:black; font-weight:bold;padding-left:310px;">${player.player_role}</p>
                 </div>
 
                 
                <div style="text-align:left">
-                    <p style="margin-top:1px; font-size: 21px; color:black; font-weight:bold;padding-left:310px;">${player.batting_style}</p>
+                    <p style="margin-top:-9px; font-size: 21px; color:black; font-weight:bold;padding-left:310px;">${player.batting_style}</p>
                 </div>
 
                 
                 <div style="text-align:left">
-                    <p style="margin-top:-10px; font-size: 21px; color:black; font-weight:bold;padding-left:310px;">${player.bowling_style}</p>
+                    <p style="margin-top:-11px; font-size: 21px; color:black; font-weight:bold;padding-left:310px;">${player.bowling_style}</p>
                 </div>
 
                 
                 <div style="text-align:left">
-                    <p style="margin-top:-7px; font-size: 21px; color:black; font-weight:bold;padding-left:310px;">${capitalizeFirst(player.location)}</p>
+                    <p style="margin-top:-12px; font-size: 21px; color:black; font-weight:bold;padding-left:310px;">${capitalizeFirst(player.location)}</p>
                 </div>
 
                 <div style="text-align:left">
-                    <p style="margin-top:-7px; font-size: 21px; color:black; font-weight:bold;margin-left:310px;">${player.contact_no}</p>
+                    <p style="margin-top:-10px; font-size: 21px; color:black; font-weight:bold;margin-left:310px;">${player.contact_no}</p>
                 </div>
 
-                 <div style="text-align:left">
-                    <p style="margin-top:2px; margin-left:40px; font-size: 21px; color:white; font-weight:bold;">${player.fullname.toUpperCase()}</p>
-                </div>
+                 
 
                 ${player.bid_amount ? `
                 <div style="text-align:left";>
@@ -157,7 +160,7 @@ const PDFCreator: React.FC<props> = ({playerList,teamName}) => {
     }
 
     // Save the PDF
-    pdf.save(teamName ? teamName+'.pdf' : "All Kerala Monsoon CL Players.pdf");
+    pdf.save(teamName ? teamName+'.pdf' : "All Kerala SN Players.pdf");
     setIsLoading(false)
 };
 
